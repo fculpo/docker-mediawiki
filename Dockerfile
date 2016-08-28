@@ -10,12 +10,14 @@ RUN set -x; \
         g++ \
         libicu52 \
         libicu-dev \
+        libldap2-dev \
     && pecl install intl \
     && echo extension=intl.so >> /usr/local/etc/php/conf.d/ext-intl.ini \
     && apt-get purge -y --auto-remove g++ libicu-dev \
     && rm -rf /var/lib/apt/lists/*
 
-RUN docker-php-ext-install mysqli opcache
+RUN docker-php-ext-configure ldap --with-libdir=lib/x86_64-linux-gnu/ && \
+    docker-php-ext-install mysqli opcache ldap
 
 RUN set -x; \
     apt-get update \
